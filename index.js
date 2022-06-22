@@ -1,18 +1,40 @@
+
+console.log('START LIB.....');
 module.exports.validate = (options) => (req, res, next) => {
   const errors = [];
 
   for (const it of options) {
-    const params = req[it.source];
+    const { validation, field, source, message, type } = it;
+    const params = req[source];
+    const fieldValue = params[field];
 
-    if (it.validation?.custom instanceof Function) {
-      if (it.validation?.custom(params)) errors.push({ field: it.field, message: `${it.message}` });
+
+    console.log('==================================================');
+    console.log(validation);
+    console.log('==================================================');
+
+
+    if (validation?.custom instanceof Function) {
+      if (validation?.custom(params)) errors.push({ field: field, message: `${message}` });
     }
 
-    if (it.validation?.required && !params[it.field]) {
-      errors.push({ field: it.field, message: it.message });
+    if (validation?.required && !fieldValue) {
+      errors.push({ field: field, message: `${field} must be provided` });
     }
 
-    switch (it.type) {
+    if (validation.hasOwnProperty("equal") && validation?.equal !== fieldValue) {
+      errors.push({ field: field, message: `${field} must be equal to [${validation?.equal}]` });
+    }
+
+    if (validation.hasOwnProperty("notEqual") && validation?.notEqual === fieldValue) {
+      errors.push({ field: field, message: `${field} must be not equal to [${validation?.notEqual}]` });
+    }
+
+    if (validation?.inList && !validation?.inList.includes(fieldValue)) {
+      errors.push({ field: field, message: message || `${field} must contain one of these values [${validation?.inList}].` });
+    }
+
+    switch (type) {
       case 'string':
         errors.push(...validateString(it, params));
         break;
@@ -52,7 +74,8 @@ const validateNumber = (option, params) => {
   if (!Number.isFinite(value)) errors.push({ field: option.field, message: `${option.field} must be a valid Number.` });
 
   if (option.validation?.range && checkRange(option.validation?.range, value)) {
-    errors.push({ field: option.field, message: `${option.message}` });
+    const { min, max } = option.validation?.range;
+    errors.push({ field: option.field, message: `${option.field} must be between ${min} and ${max}.` });
   }
 
   return errors;
