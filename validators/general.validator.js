@@ -1,5 +1,5 @@
 const general = (option, params) => {
-  const { validation, validation: { required, custom, equal, notEqual, inList }, field } = option;
+  const { validations, validations: { required, custom, equal, notEqual, inList }, field } = option;
   const fieldValue = params[field];
   const errors = [];
 
@@ -11,11 +11,11 @@ const general = (option, params) => {
     if (custom?.value(params)) errors.push({ field, message: custom?.message || `${field} error.` });
   }
 
-  if (validation.hasOwnProperty("equal") && equal.value !== fieldValue) {
+  if (validations.hasOwnProperty("equal") && equal.value !== fieldValue) {
     errors.push({ field, message: equal.message || `${field} must be equal to [${equal?.value}]` });
   }
 
-  if (validation.hasOwnProperty("notEqual") && notEqual === fieldValue) {
+  if (validations.hasOwnProperty("notEqual") && notEqual === fieldValue) {
     errors.push({ field, message: notEqual.message || `${field} must be not equal to [${notEqual?.value}]` });
   }
 

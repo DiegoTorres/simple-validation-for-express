@@ -1,7 +1,7 @@
 const { checkRange } = require('./range');
 
 exports.validateNumber = (option, params) => {
-  const { validation: { range }, field } = option;
+  const { validations: { range }, field } = option;
   const errors = [];
   const fieldValue = params[option.field];
 

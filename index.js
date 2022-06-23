@@ -6,7 +6,7 @@ module.exports.validate = (options) => (req, res, next) => {
   const errors = [];
 
   for (const it of options) {
-    const { validation, source, type } = it;
+    const { validations, source, type } = it;
     const params = req[source];
 
     errors.push(...general(it, params));
