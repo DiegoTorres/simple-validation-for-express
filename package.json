@@ -1,6 +1,6 @@
 {
   "name": "@diegoti/simple-validation-for-express",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Simple validation for express",
   "main": "index.js",
   "scripts": {
