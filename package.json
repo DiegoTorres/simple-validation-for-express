@@ -2,6 +2,10 @@
   "name": "@diegoti/simple-validation-for-express",
   "version": "1.0.4",
   "description": "Simple validation for express",
+  "engines": {
+    "node": ">=16.15.1",
+    "npm": ">=8.12.1"
+  },
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

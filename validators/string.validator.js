@@ -1,7 +1,7 @@
 const { checkRange } = require('./range');
 
 const validateString = (option, params) => {
-  const { validations: { range, size }, field } = option;
+  const { validations: { range, size, confirmPassword }, field } = option;
   const fieldValue = params[field];
   const errors = [];
 
@@ -17,6 +17,8 @@ const validateString = (option, params) => {
     }
 
     if (size?.value && length !== size?.value) errors.push({ field, message: size?.message || `${field} must have ${size?.value} characters.` });
+
+    if (confirmPassword && fieldValue !== params[confirmPassword?.value]) errors.push({ field, message: confirmPassword?.message || 'Confirm password doesn\'t match new password.' });
   }
 
   return errors;

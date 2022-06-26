@@ -21,6 +21,7 @@ const uservalidator = [
     validations: {
       required: { value: true, message: '[name.required] custom message.' },
       size: { value: 7, message: '[name.size] custom message.' },
+      confirmPassword: { value: "confirmPasswordField", message: '[confirmPassword.confirmPasswordField] doesn\'t match new password.' },
     },
   },
   {
@@ -84,6 +85,10 @@ Example of `req.errors`:
     {
       "field": "name",
       "message": "[name.required] custom message."
+    },
+    {
+      "field": "name",
+      "message": "[confirmPassword.confirmPasswordField] doesn't match new password."
     },
     {
       "field": "name",
