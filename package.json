@@ -1,6 +1,6 @@
 {
   "name": "@diegoti/simple-validation-for-express",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Simple validation for express",
   "engines": {
     "node": ">=16.15.1",
