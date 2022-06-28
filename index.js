@@ -6,20 +6,24 @@ module.exports.validate = (options) => (req, res, next) => {
   const errors = [];
 
   for (const it of options) {
-    const { validations, source, type } = it;
-    const params = req[source];
+    try {
+      const { validations, source, type } = it;
+      const dataSource = req[source]; // source == body || query || params
 
-    errors.push(...general(it, params));
+      errors.push(...general(it, dataSource, req));
 
-    switch (type) {
-      case 'string':
-        errors.push(...validateString(it, params));
-        break;
-      case 'number':
-        errors.push(...validateNumber(it, params));
-        break;
-      default:
-        break;
+      switch (type) {
+        case 'string':
+          errors.push(...validateString(it, dataSource));
+          break;
+        case 'number':
+          errors.push(...validateNumber(it, dataSource));
+          break;
+        default:
+          break;
+      }
+    } catch (error) {
+      console.error(error);
     }
   }
 

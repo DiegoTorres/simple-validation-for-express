@@ -1,4 +1,4 @@
-<p>&nbsp;</p>
+# simple-validation-for-express
 
 ## Getting Started
 
@@ -8,7 +8,42 @@ Install it using [`npm`](https://www.npmjs.com/package/@diegoti/simple-validatio
 npm i @diegoti/simple-validation-for-express
 ```
 
-## Example
+Validations List
+-----------------
+* string
+  * required
+  * size
+  * range
+  * email
+  * confirmPassword
+  * inList
+  * equal
+  * notEqual
+  * custom
+* number
+  * required
+  * range
+  * inList
+  * equal
+  * notEqual
+  * custom
+
+
+## Config object definition
+```javascript
+{
+  source: 'req property from express: body, query or params',
+  type: 'string or number',
+  field: 'property name that exists inside source',
+  validations: {
+    'validations_list_above': { 
+      value: 'see examples below.',
+      message: 'it overrides default message.',
+    }
+  }
+},
+```
+## Usage
 
 Define a configuration object with the validations.
 
@@ -20,8 +55,15 @@ const uservalidator = [
     field: 'name',
     validations: {
       required: { value: true, message: '[name.required] custom message.' },
-      size: { value: 7, message: '[name.size] custom message.' },
-      confirmPassword: { value: "confirmPasswordField", message: '[confirmPassword.confirmPasswordField] doesn\'t match new password.' },
+    },
+  },
+  {
+    source: 'body',
+    type: 'string',
+    field: 'email',
+    validations: {
+      required: { value: true, message: '[email.required] custom message.' },
+      email: { value: true },
     },
   },
   {
@@ -31,6 +73,18 @@ const uservalidator = [
     validations: {
       required: { value: true, message: '[password.required] custom message.' },
       range: { value: { min: 8, max: 16 } },
+      confirmPassword: { value: "confirmPassword", message: '[password.confirmPassword] doesn\'t match new password.' },
+    },
+  },
+  {
+    source: '',
+    type: 'string',
+    field: 'confirmPassword',
+    validations: {
+      custom: {
+        value: (body, query, params) => (body.confirmPassword === '123456'),
+        message: 'Weak password, choose a strong password.',
+      },
     },
   },
   {
@@ -87,12 +141,12 @@ Example of `req.errors`:
       "message": "[name.required] custom message."
     },
     {
-      "field": "name",
-      "message": "[confirmPassword.confirmPasswordField] doesn't match new password."
+      "field": "email",
+      "message": "[email.required] custom message."
     },
     {
-      "field": "name",
-      "message": "[name.size] custom message."
+      "field": "email",
+      "message": "email with value [@myemail@provider.com] is not a valid email."
     },
     {
       "field": "password",
@@ -101,6 +155,14 @@ Example of `req.errors`:
     {
       "field": "password",
       "message": "password must be between 8 and 16 characters."
+    },
+    {
+      "field": "password",
+      "message": "[password.confirmPassword] doesn't match new password."
+    },
+    {
+      "field": "confirmPassword",
+      "message": "Weak password, choose a strong password."
     },
     {
       "field": "role",

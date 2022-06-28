@@ -1,14 +1,19 @@
 const { checkRange } = require('./range');
 
-const validateString = (option, params) => {
-  const { validations: { range, size, confirmPassword }, field } = option;
+const validateString = (option, params = {}) => {
+  const { validations: { range, size, confirmPassword, email }, field } = option;
   const fieldValue = params[field];
   const errors = [];
 
   if (fieldValue) {
-    if ((typeof fieldValue) !== 'string') errors.push({ field, message: `${option.field} must be a String.` });
+    if ((typeof fieldValue) !== 'string') errors.push({ field, message: `${field} must be a String.` });
 
     const length = fieldValue?.length;
+
+    if (email && email.value === true) {
+      const REG_EXP = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+      if (!REG_EXP.test(fieldValue)) errors.push({ field, message: email.message || `${field} with value [${fieldValue}] is not a valid email.` });
+    }
 
     if (range?.value) {
       const { min, max } = range?.value;
